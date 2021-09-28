@@ -33,12 +33,13 @@ public class EFE_Base: MonoBehaviour {
 	public bool doingTransitionFade;//a special fade transition
 	public bool panelIsTransitioning=false;//any kind of transition
 	
-	private Camera myMainCamera;
+	public Camera myMainCamera;
 	private int oldCullingMask;
 	
 	void Awake()
 	{
 		efe_base=this.gameObject;
+		if(!myMainCamera)
 		myMainCamera =Camera.main;
 		oldCullingMask = myMainCamera.cullingMask;
 	}

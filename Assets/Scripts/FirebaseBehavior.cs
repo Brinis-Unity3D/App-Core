@@ -15,9 +15,17 @@ public class FirebaseBehavior : MonoBehaviour
     public PhoneAuthProvider provider;
     public InputField phoneNumber;
 
-    void Start()
+    IEnumerator Start()
     {
-        
+        yield return null;
+        yield return null;
+        yield return null;
+        yield return null;
+        yield return null;
+        yield return null;
+        yield return null;
+        yield return null;
+        yield return new WaitForSeconds(1);
         AppOptions options = new AppOptions();
         options.DatabaseUrl =new System.Uri( "https://virtual-saf-default-rtdb.firebaseio.com");
         FirebaseApp app = FirebaseApp.Create(options);

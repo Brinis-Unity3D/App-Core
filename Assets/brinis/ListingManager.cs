@@ -39,8 +39,14 @@ namespace brinis
         }
 
         public DatabaseReference reference;
-        void Start()
+        IEnumerator Start()
         {
+            yield return null;
+            yield return null;
+            yield return null;
+            yield return null;
+            yield return null;
+            yield return new WaitForSeconds(1);
             AppOptions options = new AppOptions();
             options.DatabaseUrl = new System.Uri(realTimeBaseURI);
             FirebaseApp app = FirebaseApp.Create(options);

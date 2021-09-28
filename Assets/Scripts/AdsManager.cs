@@ -14,6 +14,8 @@ public class AdsManager : MonoBehaviour
     public void OnApplicationPause(bool paused)
     {
         // Display the app open ad when the app is foregrounded
+        if (Time.realtimeSinceStartup < 10) return;
+
         if (!paused)
         {
            ShowAdIfAvailable();

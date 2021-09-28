@@ -163,6 +163,10 @@ namespace Firebase.Sample.Auth
                     DebugLog("ERROR: Failed to initialize secondary authentication object.");
                 }
             }
+            Invoke("CheckAuth",1);
+        }
+        void CheckAuth()
+        {
             AuthStateChanged(this, null);
         }
 
