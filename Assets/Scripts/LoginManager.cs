@@ -83,6 +83,7 @@ namespace Firebase.Sample.Auth
         public UnityEvent loginEvent,signoutEvent;
         public virtual void Start()
         {
+            
             Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task => {
                 dependencyStatus = task.Result;
                 if (dependencyStatus == Firebase.DependencyStatus.Available)
@@ -414,6 +415,8 @@ namespace Firebase.Sample.Auth
                 if (LogTaskCompletion(task, "User profile"))
                 {
                     DisplayDetailedUserInfo(auth.CurrentUser, 1);
+                    UserManager.instance.SetUser(auth.CurrentUser);
+                    UserManager.instance.SaveUser();
                 }
             });
         }

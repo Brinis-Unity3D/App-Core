@@ -11,6 +11,7 @@ public class WorkerInfoController : MonoBehaviour
     void Start()
     {
         EasyCrudsManager.SetTextAutomaticly<WorkerInfo>(transform,info);
+        //ListingManager.Save<WorkerInfo>(info);
     }
  
 

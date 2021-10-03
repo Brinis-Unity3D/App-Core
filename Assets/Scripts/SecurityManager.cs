@@ -5,7 +5,7 @@ using UnityEngine;
 public class SecurityManager : MonoBehaviour
 {
     // Start is called before the first frame update
-    public Station service;
+    public ServiceStation service;
     void Start()
     {
        Debug.Log(" encode = " + Base64Encode("brinis"));
@@ -13,6 +13,7 @@ public class SecurityManager : MonoBehaviour
        Debug.Log(" decodeEncode = " + Base64Decode(Base64Encode("brinis")));
         service.id = Base64Encode(service.id);
         Debug.Log("service json = "+JsonUtility.ToJson(service));
+      
     }
 
     // Update is called once per frame

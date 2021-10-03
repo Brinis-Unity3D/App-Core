@@ -38,7 +38,7 @@ namespace brinis
           //  FirebaseApp.DefaultInstance.SetEditorDatabaseUrl(realTimeBaseURI);
         }
 
-        public DatabaseReference reference;
+        public static DatabaseReference reference;
         IEnumerator Start()
         {
             yield return null;
@@ -47,11 +47,18 @@ namespace brinis
             yield return null;
             yield return null;
             yield return new WaitForSeconds(1);
-            AppOptions options = new AppOptions();
+
+            print("after yield");
+           /* AppOptions options = new AppOptions();
             options.DatabaseUrl = new System.Uri(realTimeBaseURI);
             FirebaseApp app = FirebaseApp.Create(options);
+           */
+           
 
-            reference = FirebaseDatabase.DefaultInstance.RootReference;
+            while (!FirebaseBehavior.instance) yield return null;
+            while (FirebaseBehavior.instance.reference==null) yield return null;
+            print("getting ref from FirebaseBehavior.instance");
+            reference = FirebaseBehavior.instance.reference;
         }
 
 
@@ -83,7 +90,7 @@ namespace brinis
                 Debug.LogError("id is null for the object of type " + t.GetType());
                 return;
             }
-            FirebaseDatabase.DefaultInstance.GetReference(EasyCrudsManager.TableName<T>()).Child(t.GetType().ToString()[0] + id).SetRawJsonValueAsync(JsonConvert.SerializeObject(t));
+            reference.Root.Child(EasyCrudsManager.TableName<T>()).Child(t.GetType().ToString()[0] + id).SetRawJsonValueAsync(JsonConvert.SerializeObject(t));
         }
 
         public static void SyncTableFromDatabase<T>(Transform prefab)
@@ -119,8 +126,8 @@ namespace brinis
                 Debug.LogWarning("waiting  key at "+instance.name);
                 yield return new WaitForSeconds(1);
             }
-            FirebaseDatabase.DefaultInstance
-     .GetReference(EasyCrudsManager.TableName<T>())
+            reference.Root
+      .Child(EasyCrudsManager.TableName<T>())
      .ValueChanged += HandleValueChanged<T>;
 
         }
@@ -139,14 +146,14 @@ namespace brinis
 
             if (key2 != null)
             {
-                FirebaseDatabase.DefaultInstance
-           .GetReference(EasyCrudsManager.TableName<T>()).OrderByChild(key2).EqualTo(value2).OrderByChild(key).EqualTo(value)
+                reference.Root
+     .Child(EasyCrudsManager.TableName<T>()).OrderByChild(key2).EqualTo(value2).OrderByChild(key).EqualTo(value)
            .ValueChanged += HandleValueChanged<T>;
             }
             else
             {
-                FirebaseDatabase.DefaultInstance
-               .GetReference(EasyCrudsManager.TableName<T>()).OrderByChild(key).EqualTo(value)
+                reference.Root
+      .Child(EasyCrudsManager.TableName<T>()).OrderByChild(key).EqualTo(value)
                .ValueChanged += HandleValueChanged<T>;
             }
             //t.service
@@ -164,8 +171,8 @@ namespace brinis
             //FirebaseDatabase.DefaultInstance.
             foreach (string k in EasyCrudsManager.allPrefabs.Keys)
             {
-                FirebaseDatabase.DefaultInstance
-              .GetReference(k)
+                reference.Root
+      .Child(k)
               .ValueChanged -= HandleValueChanged<Type>;
             }
 

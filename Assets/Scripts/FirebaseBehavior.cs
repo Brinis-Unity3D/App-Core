@@ -14,24 +14,39 @@ public class FirebaseBehavior : MonoBehaviour
     public FirebaseUser user;
     public PhoneAuthProvider provider;
     public InputField phoneNumber;
-
-    IEnumerator Start()
+    public static FirebaseBehavior instance;
+  
+    private void Awake()
     {
-        yield return null;
-        yield return null;
-        yield return null;
-        yield return null;
-        yield return null;
-        yield return null;
-        yield return null;
-        yield return null;
-        yield return new WaitForSeconds(1);
+        instance = this;
+    }
+    void Start()
+    {
+
+        /* yield return null;
+         yield return null;
+         yield return null;
+         yield return null;
+         yield return null;
+         yield return null;
+         yield return null;
+         yield return null;
+         //yield return new WaitForSeconds(1);
+        */
+
+       
         AppOptions options = new AppOptions();
-        options.DatabaseUrl =new System.Uri( "https://virtual-saf-default-rtdb.firebaseio.com");
+        options.DatabaseUrl = new System.Uri("https://virtual-saf-default-rtdb.firebaseio.com");
+        //new System.Uri("https://virtual-saf-default-rtdb.firebaseio.com");
+       // AppOptions.LoadFromJsonConfig(Application.streamingAssetsPath + "/" + file.name);
         FirebaseApp app = FirebaseApp.Create(options);
-        
-        reference = FirebaseDatabase.DefaultInstance.RootReference;
+        //app.Options.
+        //app.Options.DatabaseUrl.AbsoluteUri = "https://virtual-saf-default-rtdb.firebaseio.com";
+        reference = FirebaseDatabase.GetInstance(app,"https://virtual-saf-default-rtdb.firebaseio.com").RootReference;
+        reference.Child("test").Child("" + ((int)Time.realtimeSinceStartup)).SetValueAsync(Time.realtimeSinceStartup);
+
         InitializeFirebase();
+
     }
     void InitializeFirebase()
     {
@@ -64,7 +79,7 @@ public class FirebaseBehavior : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //reference.Child(""+((int)Time.realtimeSinceStartup)).SetValueAsync(Time.realtimeSinceStartup);
+        reference.Child("test").Child(""+((int)Time.realtimeSinceStartup)).SetValueAsync(Time.realtimeSinceStartup);
 
     }
     public void Login()

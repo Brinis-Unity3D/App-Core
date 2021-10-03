@@ -1,6 +1,12 @@
+using Firebase.Auth;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+
+
+
+
 
 [System.Serializable]
 public class RateInfo
@@ -12,6 +18,7 @@ public class RateInfo
 public class BaseInfo
 {
     public string id = "007";
+   
     public string name = "Sala7";
     public RateInfo rate;
     public float stars = 4;
@@ -35,6 +42,7 @@ public class WorkerInfo : UserInfo
 
     public int score = 0;
 }
+
 [System.Serializable]
 public class Article : BaseInfo
 {

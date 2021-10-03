@@ -1,19 +1,27 @@
-﻿using System.Collections;
+﻿using Firebase.Auth;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
 
-public class Client
+public class IdentityInfo
 {
     public string name;
-    public string lastName;
-    public string CIN;
     public string phoneNumber;
     public Vector2 gpsPosition;
-    public List<Placement> history=new List<Placement>();
     public List<Vote> votes = new List<Vote>();
-    public string image;
+}
+
+[System.Serializable]
+
+public class Client: IdentityInfo
+{
+  
+    public string lastName;
+    public string CIN;
+    public List<Placement> history=new List<Placement>();
+    public string InstitutionID = null;
 }
 [System.Serializable]
 public class Relation
@@ -32,13 +40,20 @@ public class Vote
     public Relation relation = new Relation();
 }
 [System.Serializable]
-public class Station
+public class ServiceStation:IdentityInfo
 {
-    public string name;
-    public string id;
+   
+    public string id="noID";
     public string image;
-    public Vector2 gpsPosition;
+    public int windowNumber = 1;
+    public List<string> agents = new List<string>();
     public List<Placement> clientsListForToday = new List<Placement>();
     public List<Placement> clientsListHistory = new List<Placement>();
 
+}
+[System.Serializable]
+public class Institution: IdentityInfo
+{
+    public string owner;
+    List<ServiceStation> allServices = new List<ServiceStation>();
 }

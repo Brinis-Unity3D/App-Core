@@ -5,12 +5,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using ZXing;
 using UnityEngine.Events;
+using Newtonsoft.Json;
 
 public class QRScanner : MonoBehaviour
 {
     WebCamTexture webcamTexture;
     string QrCode = string.Empty;
-   string template = "https://qrco.de/";
    public string id = "";
    public Client client = new Client();
     public UnityEvent onScanSuccess;
@@ -61,11 +61,16 @@ public class QRScanner : MonoBehaviour
     }
     public void SubscribeToQueue()
     {
-        id = SecurityManager.Base64Decode(QrCode.Replace(template,""));
+        string json = SecurityManager.Base64Decode(QrCode);
+        QrCode = json;
+        ServiceStation detectedService = JsonConvert.DeserializeObject<ServiceStation>(json);
         Placement placement = new Placement();
         placement.relation.client = client.CIN;
-        placement.relation.station = id;
+        placement.relation.station = detectedService.id;
         client.history.Add(placement);
+        //Load ServiceStationFromDatabase add Relation to it then save it  again to database
+
+
     }
     
     private void OnGUI()

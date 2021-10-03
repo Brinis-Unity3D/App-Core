@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes 1/mainScene.unity
     guid: d267192f7abb8294293cadeed29b9b39
+  - enabled: 0
+    path: Assets/QRCodeReaderGenerator/Example Scenes/QRCodeGenerator.unity
+    guid: ca5306eb186f57e48a353213481bedaa
   m_configObjects: {}
