@@ -13,7 +13,7 @@ using UnityEngine.Video;
 
 namespace brinis
 {
-    public class EasyCrudsManager : MonoBehaviour
+    public  class EasyCrudsManager : MonoBehaviour
     {
         public static Type[] typesString = new Type[] { typeof(string) };
         static string filename, filePath;
@@ -495,7 +495,7 @@ namespace brinis
             {
                 //  Debug.Log(p.Name + "=" + p.GetValue(t));
 
-                pivot = prefabPivotInstance.Find(p.Name);
+                pivot =FindDeepChild(prefabPivotInstance, p.Name);//prefabPivotInstance.Find(p.Name);
                 if (pivot)
                 {
 
@@ -611,6 +611,11 @@ namespace brinis
             trustedObject.StartCoroutine(SetAutomaticlyRoutine<T>(prefabPivotInstance, t));
         }
         public static bool canWorkd=true;
+
+
+
+
+
         public static T GetInfoAutomaticly<T>(Transform formularHead, System.Object t)
         {
              if (!canWorkd)
@@ -625,89 +630,148 @@ namespace brinis
             foreach (FieldInfo p in allpropertys)
             {
                 //  Debug.Log(p.Name + "=" + p.GetValue(t));
-
-                pivot = formularHead.Find(p.Name);
-                if (pivot)
+                try
                 {
-
-                    //  Debug.Log("  p.FieldType = " + p.FieldType);
-                    Type type = p.FieldType;
-                    if (pivot.GetComponentInChildren<Dropdown>())
+                    pivot = FindDeepChild(formularHead, p.Name); //formularHead.Find(p.Name);
+                    if (pivot)
                     {
 
-                        if (p.FieldType.BaseType == typeof(Enum))
+                        //  Debug.Log("  p.FieldType = " + p.FieldType);
+                        Type type = p.FieldType;
+                        if (pivot.GetComponent<Text>())
                         {
 
-                            /*  foreach (typee r in Enum.GetValues(p.FieldType))
-                            Debug.Log(r);*/
-                            p.SetValue(t, pivot.GetComponentInChildren<Dropdown>().value);
+                            if (p.FieldType.GetMethod("Parse", new Type[] { typeof(string) }) != null)
+                            {
+                                p.SetValue(t, p.FieldType.GetMethod("Parse", typesString).Invoke(p, new object[] { pivot.GetComponent<Text>().text }));
+                            }
+                            if (p.FieldType == typeof(string))
+                            {
+                                p.SetValue(t, pivot.GetComponent<Text>().text);
+                            }
+                            if (p.FieldType.BaseType == typeof(int))
+                            {
+                                p.SetValue(t, int.Parse(pivot.GetComponent<Text>().text));
+                            }
+                            if (p.FieldType.BaseType == typeof(float))
+                            {
+                                p.SetValue(t, float.Parse(pivot.GetComponent<Text>().text));
+                            }
                         }
-                    }
-                    if (pivot.GetComponentInChildren<TMPro.TMP_Dropdown>())
-                    {
 
-                        if (p.FieldType.BaseType == typeof(Enum))
+                        if (pivot.GetComponent<TMPro.TextMeshProUGUI>())
                         {
 
-                            /*  foreach (typee r in Enum.GetValues(p.FieldType))
-                            Debug.Log(r);*/
-                            p.SetValue(t, pivot.GetComponent<TMPro.TMP_Dropdown>().value);
+                            if (p.FieldType.GetMethod("Parse", new Type[] { typeof(string) }) != null)
+                            {
+                                p.SetValue(t, p.FieldType.GetMethod("Parse", typesString).Invoke(p, new object[] { pivot.GetComponent<TMPro.TextMeshProUGUI>().text }));
+                            }
+                            if (p.FieldType == typeof(string))
+                            {
+                                p.SetValue(t, pivot.GetComponent<TMPro.TextMeshProUGUI>().text);
+                            }
+                            if (p.FieldType.BaseType == typeof(int))
+                            {
+                                p.SetValue(t, int.Parse(pivot.GetComponent<TMPro.TextMeshProUGUI>().text));
+                            }
+                            if (p.FieldType.BaseType == typeof(float))
+                            {
+                                p.SetValue(t, float.Parse(pivot.GetComponent<TMPro.TextMeshProUGUI>().text));
+                            }
                         }
-                    }
-                    if (pivot.GetComponentInChildren<TMPro.TMP_InputField>())
-                    {
 
-                        if (p.FieldType.GetMethod("Parse", new Type[] { typeof(string) }) != null)
+                        if (pivot.GetComponent<Dropdown>())
                         {
-                            p.SetValue(t, p.FieldType.GetMethod("Parse", typesString).Invoke(p, new object[] { pivot.GetComponentInChildren<TMPro.TMP_InputField>().text }));
-                        }
-                        if (p.FieldType == typeof(string))
-                        {
-                            p.SetValue(t, pivot.GetComponentInChildren<TMPro.TMP_InputField>().text);
-                        }
-                    }
-                    if (pivot.GetComponentInChildren<TMPro.TextMeshProUGUI>())
-                    {
 
-                        if (p.FieldType.GetMethod("Parse", new Type[] { typeof(string) }) != null)
-                        {
-                            p.SetValue(t, p.FieldType.GetMethod("Parse", typesString).Invoke(p, new object[] { pivot.GetComponentInChildren<TMPro.TextMeshProUGUI>().text }));
-                        }
-                        if (p.FieldType == typeof(string))
-                        {
-                            p.SetValue(t, pivot.GetComponentInChildren<TMPro.TextMeshProUGUI>().text);
-                        }
-                    }
-                    if (pivot.GetComponentInChildren<InputField>())
-                    {
+                            if (p.FieldType.BaseType == typeof(Enum))
+                            {
 
-                        if (p.FieldType.GetMethod("Parse", new Type[] { typeof(string) }) != null)
-                        {
-                            p.SetValue(t, p.FieldType.GetMethod("Parse", typesString).Invoke(p, new object[] { pivot.GetComponentInChildren<InputField>().text }));
+                                /*  foreach (typee r in Enum.GetValues(p.FieldType))
+                                Debug.Log(r);*/
+                                p.SetValue(t, pivot.GetComponent<Dropdown>().value);
+                            }
                         }
-                        if (p.FieldType == typeof(string))
+                        if (pivot.GetComponent<TMPro.TMP_Dropdown>())
                         {
-                            p.SetValue(t, pivot.GetComponentInChildren<InputField>().text);
-                        }
-                    }
-                    if (pivot.GetComponentInChildren<Text>())
-                    {
 
-                        if (p.FieldType.GetMethod("Parse", new Type[] { typeof(string) }) != null)
-                        {
-                            p.SetValue(t, p.FieldType.GetMethod("Parse", typesString).Invoke(p, new object[] { pivot.GetComponentInChildren<Text>().text }));
+                            if (p.FieldType.BaseType == typeof(Enum))
+                            {
+
+                                /*  foreach (typee r in Enum.GetValues(p.FieldType))
+                                Debug.Log(r);*/
+                                p.SetValue(t, pivot.GetComponent<TMPro.TMP_Dropdown>().value);
+                            }
                         }
-                        if (p.FieldType == typeof(string))
+                        if (pivot.GetComponent<TMPro.TMP_InputField>())
                         {
-                            p.SetValue(t, pivot.GetComponentInChildren<Text>().text);
+
+                            if (p.FieldType.GetMethod("Parse", new Type[] { typeof(string) }) != null)
+                            {
+                                p.SetValue(t, p.FieldType.GetMethod("Parse", typesString).Invoke(p, new object[] { pivot.GetComponent<TMPro.TMP_InputField>().text }));
+                            }
+                            if (p.FieldType == typeof(string))
+                            {
+                                p.SetValue(t, pivot.GetComponent<TMPro.TMP_InputField>().text);
+                            }
+                            if (p.FieldType.BaseType == typeof(int))
+                            {
+                                p.SetValue(t, int.Parse(pivot.GetComponent<TMPro.TMP_InputField>().text));
+                            }
+                            if (p.FieldType.BaseType == typeof(float))
+                            {
+                                p.SetValue(t, float.Parse(pivot.GetComponent<TMPro.TMP_InputField>().text));
+                            }
                         }
+                       
+                        if (pivot.GetComponent<InputField>())
+                        {
+
+                            if (p.FieldType.GetMethod("Parse", new Type[] { typeof(string) }) != null)
+                            {
+                                p.SetValue(t, p.FieldType.GetMethod("Parse", typesString).Invoke(p, new object[] { pivot.GetComponent<InputField>().text }));
+                            }
+                            if (p.FieldType == typeof(string))
+                            {
+                                p.SetValue(t, pivot.GetComponent<InputField>().text);
+                            }
+                            if (p.FieldType.BaseType == typeof(int))
+                            {
+                                p.SetValue(t, int.Parse(pivot.GetComponent<InputField>().text));
+                            }
+                            if (p.FieldType.BaseType == typeof(float))
+                            {
+                                p.SetValue(t, float.Parse(pivot.GetComponent<InputField>().text));
+                            }
+                        }
+                        
                     }
                 }
+                catch (Exception e)
+                {
+                    Debug.LogError("brinis error: " + e.Message);
+                }
             }
+               
             return (T)t;
         }
- 
 
+        public static Transform FindDeepChild(Transform aParent, string aName)
+        {
+           
+            Queue<Transform> queue = new Queue<Transform>();
+            queue.Enqueue(aParent);
+            while (queue.Count > 0)
+            {
+                var c = queue.Dequeue();
+                if (c.name == aName)
+                    return c;
+                foreach (Transform t in c)
+                    queue.Enqueue(t);
+            }
+            return null;
+        }
     }
+
+
 }
 //}

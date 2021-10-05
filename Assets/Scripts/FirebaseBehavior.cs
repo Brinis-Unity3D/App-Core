@@ -43,7 +43,7 @@ public class FirebaseBehavior : MonoBehaviour
         //app.Options.
         //app.Options.DatabaseUrl.AbsoluteUri = "https://virtual-saf-default-rtdb.firebaseio.com";
         reference = FirebaseDatabase.GetInstance(app,"https://virtual-saf-default-rtdb.firebaseio.com").RootReference;
-        reference.Child("test").Child("" + ((int)Time.realtimeSinceStartup)).SetValueAsync(Time.realtimeSinceStartup);
+        //reference.Child("test").Child("" + ((int)Time.realtimeSinceStartup)).SetValueAsync(Time.realtimeSinceStartup);
 
         InitializeFirebase();
 
@@ -79,7 +79,7 @@ public class FirebaseBehavior : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        reference.Child("test").Child(""+((int)Time.realtimeSinceStartup)).SetValueAsync(Time.realtimeSinceStartup);
+       // reference.Child("test").Child(""+((int)Time.realtimeSinceStartup)).SetValueAsync(Time.realtimeSinceStartup);
 
     }
     public void Login()

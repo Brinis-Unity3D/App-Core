@@ -13,15 +13,14 @@ public class ServiceCreationController : MonoBehaviour
     {
        
         print("FirebaseBehavior name = " + FindObjectOfType<FirebaseBehavior>().name);
+        //CreateService();
         Invoke("DoAfterTime", 2);
         Invoke("DoAfterTime", 3);
     }
     void DoAfterTime()
     {
-        UserInfo user = new UserInfo();
-        user.id = "ss";
-        brinis.ListingManager.Save<UserInfo>(user);
-        CreateService();
+       
+       // CreateService();
         
       
     }
@@ -29,9 +28,9 @@ public class ServiceCreationController : MonoBehaviour
     {
         service = new ServiceStation();
         service.id = DateTime.UtcNow.ToString("yyyy_mm_dd_hh_mm_ss");
-        service.name = nameField.text;
-        service.phoneNumber = phone.text;
-        int.TryParse(guichet.text,out service.windowNumber);
+       // service.name = nameField.text;
+        //service.phoneNumber = phone.text;
+        //int.TryParse(guichet.text,out service.windowNumber);
         service.agents.Add(UserManager.instance.user.email);
         service=brinis.EasyCrudsManager.GetInfoAutomaticly<ServiceStation>(transform,service);
         GetComponent<QRCodeGenerator>().GenerateQRCode(SecurityManager.Base64Encode(JsonConvert.SerializeObject(service)));
