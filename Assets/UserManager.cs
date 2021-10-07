@@ -31,8 +31,14 @@ public class UserManager : MonoBehaviour
     }
 
     void Start()
+    {  
+        UserInfo user = new UserInfo();
+        user.tel = "";
+        print("should show user = "+  brinis.EasyCrudsManager.ShouldShow<UserInfo>(user,ShouldShow));
+    }
+    public bool ShouldShow(UserInfo user)
     {
-        
+        return !string.IsNullOrWhiteSpace(user.tel);
     }
 
   

@@ -28,6 +28,8 @@ namespace brinis
         public static bool canWork = true;
         public string realTimeBaseURI= "https://virtual-saf-default-rtdb.firebaseio.com";
 
+      /*  public delegate void OnNewUpdateFromDatabase<T>(Dictionary<string, T> allInfos);
+        public OnNewUpdateFromDatabase<T> onUpdate = new OnNewUpdateFromDatabase<T>();*/
 
 
         void Awake()
@@ -41,6 +43,7 @@ namespace brinis
         public static DatabaseReference reference;
         IEnumerator Start()
         {
+           
             yield return null;
             yield return null;
             yield return null;
@@ -59,6 +62,7 @@ namespace brinis
             while (FirebaseBehavior.instance.reference==null) yield return null;
             print("getting ref from FirebaseBehavior.instance");
             reference = FirebaseBehavior.instance.reference;
+            
         }
 
 
@@ -92,10 +96,8 @@ namespace brinis
             }
             reference.Root.Child(EasyCrudsManager.TableName<T>()).Child(t.GetType().ToString()[0] + id).SetRawJsonValueAsync(JsonConvert.SerializeObject(t));
         }
-
-        public static void SyncTableFromDatabase<T>(Transform prefab)
+        public static void AllPrefabsCheckTable<T>(Transform prefab)
         {
-           
             if (EasyCrudsManager.allPrefabs == null)
             {
                 EasyCrudsManager.allPrefabs = new Dictionary<string, Transform>();
@@ -104,6 +106,12 @@ namespace brinis
             {
                 EasyCrudsManager.allPrefabs.Add(EasyCrudsManager.TableName<T>(), prefab);
             }
+        }
+
+        public static void SyncTableFromDatabase<T>(Transform prefab)
+        {
+
+            AllPrefabsCheckTable<T>(prefab);
             if (PlayerPrefs.HasKey(EasyCrudsManager.TableName<T>()))
             {
                 brinis.EasyCrudsManager.allTables[EasyCrudsManager.TableName<T>()] =
@@ -121,7 +129,7 @@ namespace brinis
         {
             Debug.LogWarning("WaitForKeyThenSubScribe " + typeof(T));
             yield return null;
-            while (!canWork)
+            while (reference==null)
             {
                 Debug.LogWarning("waiting  key at "+instance.name);
                 yield return new WaitForSeconds(1);
@@ -133,17 +141,8 @@ namespace brinis
         }
         public static void SyncTableFromDatabaseWithConditions<T>(Transform prefab, string key, string value, string key2 = null, string value2 = null)
         {
-            if (EasyCrudsManager.allPrefabs == null)
-            {
-                EasyCrudsManager.allPrefabs = new Dictionary<string, Transform>();
-            }
-            if (!EasyCrudsManager.allPrefabs.ContainsKey(EasyCrudsManager.TableName<T>()))
-            {
-                EasyCrudsManager.allPrefabs.Add(EasyCrudsManager.TableName<T>(), prefab);
-            }
+            AllPrefabsCheckTable<T>(prefab);
             //   Ticket t = new Ticket();
-
-
             if (key2 != null)
             {
                 reference.Root
@@ -189,7 +188,7 @@ namespace brinis
             StringJsonToCanvas<T>(args.Snapshot.GetRawJsonValue());
         }
 
-        public static void StringJsonToCanvas<T>(string json)
+        public static void StringJsonToCanvas<T>(string json, System.Func<Dictionary<string, T>, Dictionary<string, T>> lastMovesCallBack = null)
         {
             //Debug.Log("string to canvas for " + json);
             if (string.IsNullOrWhiteSpace(json)) return;
@@ -204,7 +203,7 @@ namespace brinis
             else
             {
                 if (EasyCrudsManager.allPrefabs.ContainsKey(EasyCrudsManager.TableName<T>()))
-                    trustedObject.StartCoroutine(EasyCrudsManager.ShowAll<T>(EasyCrudsManager.allPrefabs[EasyCrudsManager.TableName<T>()], EasyCrudsManager.allTables[EasyCrudsManager.TableName<T>()].ToDictionary(k => k.Key, k => (T)k.Value)));
+                    trustedObject.StartCoroutine(EasyCrudsManager.ShowAll<T>(EasyCrudsManager.allPrefabs[EasyCrudsManager.TableName<T>()], EasyCrudsManager.allTables[EasyCrudsManager.TableName<T>()].ToDictionary(k => k.Key, k => (T)k.Value),lastMovesCallBack));
                 else
                     Debug.Log("no prefab for " + EasyCrudsManager.TableName<T>());
             }

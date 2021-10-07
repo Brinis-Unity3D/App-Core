@@ -40,10 +40,10 @@ namespace brinis
             return dic;
         }
 
-        public static IEnumerator ShowAll<T>(Transform prefab, Dictionary<string, T> allInfos)
+        public static IEnumerator ShowAll<T>(Transform prefab, Dictionary<string, T> allInfos,System.Func<Dictionary<string, T>, Dictionary<string, T>> lastMovesCallBack=null)
         {
-
-                if(trustedObject==null)
+            ListingManager.AllPrefabsCheckTable<T>(prefab);
+            if (trustedObject==null)
                 {
                     trustedObject = FindObjectOfType<MonoBehaviour>();
                 }
@@ -61,7 +61,7 @@ namespace brinis
 
                 float time = Time.realtimeSinceStartup;
                 float frame = 1 / 60;
-                allInfos = LastMoves<T>(allInfos);
+                allInfos = LastMoves<T>(allInfos,lastMovesCallBack);
                 foreach (string k in allInfos.Keys)
                 {
                     if (ShouldShow<T>(allInfos[k]))
@@ -108,7 +108,7 @@ namespace brinis
                 prefabPivotInstance = Instantiate(prefab.gameObject).transform;
                 prefabPivotInstance.name = k;
                 prefabPivotInstance.transform.SetParent(prefab.transform.parent);
-                prefabPivotInstance.transform.localScale = prefab.transform.parent.localScale;
+                prefabPivotInstance.transform.localScale = prefab.transform.localScale;
                 allInstances.Add(TableName<T>() + k, prefabPivotInstance);
                 yield return null;
 
@@ -117,19 +117,23 @@ namespace brinis
             {
                 prefabPivotInstance = allInstances[TableName<T>() + k];
             }
-
             //here;
             EasyCrudsManager.SetTextAutomaticly<T>(prefabPivotInstance, t);
             yield return null;
         }
-        public static bool ShouldShow<T>(object t)
+        public static bool ShouldShow<T>(object t,System.Func<T,bool> callback=null)
         {
             // allPrefabs[TableName<T>()].GetComponent<>
             //Debug.Log("true = " + true);
             string key = TableName<T>(t.GetType().FullName);
-            if(allPrefabs.ContainsKey(key))
+            if (callback != null)
+            {
+                return callback((T)t);
+            }
+            if (allPrefabs.ContainsKey(key))
             foreach (MonoBehaviour m in allPrefabs[key].GetComponents<MonoBehaviour>())
             {
+                
                 if (m.GetType() + "" == t.GetType().FullName + "Controller")
                 {
                     //  Debug.Log(m.GetType() + " exists for real");
@@ -156,12 +160,16 @@ namespace brinis
 
             return true;
         }
-        public static Dictionary<string, T> LastMoves<T>(Dictionary<string, T> allInfos)
+        public static Dictionary<string, T> LastMoves<T>(Dictionary<string, T> allInfos,System.Func<Dictionary<string, T>, Dictionary<string, T>> callBack=null)
         {
 
             //allInfos = allInfos;
             //if()
             string key = TableName<T>(typeof(T).FullName);
+            if(callBack!=null)
+            {
+                return (callBack(allInfos));
+            }
 
             if(allPrefabs.ContainsKey(key))
             foreach (MonoBehaviour m in allPrefabs[key].GetComponents<MonoBehaviour>())

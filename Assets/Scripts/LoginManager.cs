@@ -929,6 +929,7 @@ namespace Firebase.Sample.Auth
         // Render the log output in a scroll view.
         void GUIDisplayLog()
         {
+            return;
             scrollViewVector = GUILayout.BeginScrollView(scrollViewVector);
             GUILayout.Label(logText);
             GUILayout.EndScrollView();
