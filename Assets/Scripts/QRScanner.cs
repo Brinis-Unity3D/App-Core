@@ -12,11 +12,12 @@ public class QRScanner : MonoBehaviour
     WebCamTexture webcamTexture;
     string QrCode = string.Empty;
    public string id = "";
-   public Client client = new Client();
+  
     public UnityEvent onScanSuccess;
+    public ServiceDetailsPanelController serviceDetailsPanel;
     void Start()
     {
-        client.CIN = "00345354";
+      
         var renderer = GetComponent<RawImage>();
         webcamTexture = new WebCamTexture(512, 512);
         renderer.material.mainTexture = webcamTexture;
@@ -64,10 +65,9 @@ public class QRScanner : MonoBehaviour
         string json = SecurityManager.Base64Decode(QrCode);
         QrCode = json;
         ServiceStation detectedService = JsonConvert.DeserializeObject<ServiceStation>(json);
-        Placement placement = new Placement();
-        placement.relation.client = client.CIN;
-        placement.relation.station = detectedService.id;
-        client.history.Add(placement);
+        serviceDetailsPanel.service = detectedService;
+        serviceDetailsPanel.UpdatePanel();
+
         //Load ServiceStationFromDatabase add Relation to it then save it  again to database
 
 

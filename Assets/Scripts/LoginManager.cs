@@ -107,6 +107,8 @@ namespace Firebase.Sample.Auth
         public void OnSucessLogin()
         {
            loginEvent.Invoke();
+            UserManager.instance.SetUser(auth.CurrentUser);
+            UserManager.instance.SaveUser();
         }
         public void Login()
         {

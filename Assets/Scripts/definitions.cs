@@ -7,6 +7,7 @@ using UnityEngine;
 
 public class IdentityInfo
 {
+    public string id = "noID";
     public string name;
     public string phoneNumber;
     public Vector2 gpsPosition;
@@ -22,6 +23,7 @@ public class Client: IdentityInfo
     public string CIN;
     public List<Placement> history=new List<Placement>();
     public string InstitutionID = null;
+    public string email;
 }
 [System.Serializable]
 public class Relation
@@ -43,10 +45,13 @@ public class Vote
 public class ServiceStation:IdentityInfo
 {
    
-    public string id="noID";
+   
     public string image;
     public int windowNumber = 1;
+    public string description;
     public List<string> agents = new List<string>();
+    public int currentIndex=0;
+    public int currentLast=0;
     public List<Placement> clientsListForToday = new List<Placement>();
     public List<Placement> clientsListHistory = new List<Placement>();
 
