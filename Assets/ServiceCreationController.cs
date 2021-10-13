@@ -27,13 +27,13 @@ public class ServiceCreationController : MonoBehaviour
     public void CreateService()
     {
         service = new ServiceStation();
-        service.id = DateTime.UtcNow.ToString("yyyy_mm_dd_hh_mm_ss");
+        service.id = DateTime.UtcNow.ToString("yyyy_MM_dd_hh_mm_ss");
        // service.name = nameField.text;
         //service.phoneNumber = phone.text;
         //int.TryParse(guichet.text,out service.windowNumber);
         service.agents.Add(UserManager.instance.user.email);
         service=brinis.EasyCrudsManager.GetInfoAutomaticly<ServiceStation>(transform,service);
-        GetComponent<QRCodeGenerator>().GenerateQRCode(SecurityManager.Base64Encode(JsonConvert.SerializeObject(service)));
+        GetComponent<QRCodeGenerator>().GenerateQRCode(SecurityManager.Base64Encode(JsonConvert.SerializeObject(service)),service);
         brinis.ListingManager.Save<ServiceStation>(service);
     }
 }

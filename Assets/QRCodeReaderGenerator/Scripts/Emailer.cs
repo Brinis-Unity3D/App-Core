@@ -31,7 +31,7 @@ public class Emailer : MonoBehaviour
         btnSubmit.onClick.AddListener(delegate {
             if (sendDirect)
             {
-                SendAnEmail(txtData.text);
+                SendAnEmail(kReceiverEmailAddress, txtData.text);
             }
             else
             {
@@ -54,13 +54,13 @@ public class Emailer : MonoBehaviour
                 throw new System.NotImplementedException("Check the ifdefs above.");
     }
     // Method 1: Direct message
-    public static void SendAnEmail(string message,byte[] fileBytes=null)
+    public static void SendAnEmail(string kReceiverEmailAddress, string message, string title=null, byte[] fileBytes=null)
     {
         // Create mail
         MailMessage mail = new MailMessage();
         mail.From = new MailAddress(kSenderEmailAddress);
         mail.To.Add(kReceiverEmailAddress);
-        mail.Subject = "Email Title";
+        mail.Subject = title;
         mail.Body = message;
 
         if (fileBytes != null)

@@ -109,6 +109,7 @@ namespace Firebase.Sample.Auth
            loginEvent.Invoke();
             UserManager.instance.SetUser(auth.CurrentUser);
             UserManager.instance.SaveUser();
+            Firebase.Messaging.FirebaseMessaging.SubscribeAsync("/topics/"+UserManager.instance.user.id);
         }
         public void Login()
         {
@@ -671,6 +672,7 @@ namespace Firebase.Sample.Auth
         {
             DebugLog("Signing out.",true);
             auth.SignOut();
+            Firebase.Messaging.FirebaseMessaging.UnsubscribeAsync("/topics/" + UserManager.instance.user.id);
             signoutEvent.Invoke();
         }
 

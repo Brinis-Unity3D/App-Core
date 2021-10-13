@@ -131,7 +131,7 @@ namespace brinis
             yield return null;
             while (reference==null)
             {
-                Debug.LogWarning("waiting  key at "+instance.name);
+                Debug.LogWarning("waiting  reference at " + instance.name);
                 yield return new WaitForSeconds(1);
             }
             reference.Root
@@ -240,7 +240,25 @@ namespace brinis
             }
             
         }
-      
-        
-}
+        public static Dictionary<string, T>  LoadTable<T>()
+        {
+            if (EasyCrudsManager.allTables.ContainsKey(EasyCrudsManager.TableName<T>()))
+            {
+
+                Dictionary<string, T> newDictionary = new Dictionary<string, T>();
+
+                foreach (string key in EasyCrudsManager.allTables[EasyCrudsManager.TableName<T>()].Keys)
+                    newDictionary.Add(key,(T) EasyCrudsManager.allTables[EasyCrudsManager.TableName<T>()][key]);
+                return newDictionary;
+            }
+            else
+            {
+                trustedObject.StartCoroutine(WaitForKeyThenSubScribe<T>());
+                return default(Dictionary<string, T>);
+            }
+
+        }
+
+
+    }
 }

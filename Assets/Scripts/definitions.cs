@@ -24,12 +24,15 @@ public class Client: IdentityInfo
     public List<Placement> history=new List<Placement>();
     public string InstitutionID = null;
     public string email;
+    public int index;
 }
 [System.Serializable]
 public class Relation
 {
     public string station;
     public string client;
+    public int index;
+    public System.DateTime date;
 }
 [System.Serializable]
 public class Placement

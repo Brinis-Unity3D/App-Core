@@ -15,7 +15,7 @@ public class ServiceDetailsPanelController : MonoBehaviour
     public void UpdatePanel()
     {
         service = brinis.ListingManager.Load<ServiceStation>(service.id);
-        service.currentLast = service.clientsListForToday.Count - 1;
+        service.currentLast = service.clientsListForToday.Count;
         brinis.EasyCrudsManager.SetTextAutomaticly<ServiceStation>(transform, service);
         ShowPlayerIndexOrSubscribeButton();
     }
@@ -23,27 +23,42 @@ public class ServiceDetailsPanelController : MonoBehaviour
     {
         if (!subscribeButton) return;
         if (!userIndex) return;
-
+       
         foreach (Placement p in service.clientsListForToday)
         {
             if(p.relation.client== UserManager.instance.user.id)
             {
-                subscribeButton.gameObject.SetActive(false);
+                if (!service.agents.Contains(UserManager.instance.user.email))
+                    subscribeButton.gameObject.SetActive(false);
+
                 userIndex.transform.parent.gameObject.SetActive(true);
-                userIndex.text = "" + service.clientsListForToday.IndexOf(p);
+                userIndex.text = "" + service.clientsListForToday.IndexOf(p)+1;
+
+                if(p.relation.index!=0)
+                userIndex.text = "" + p.relation.index;
                 return;
             }
         }
-        subscribeButton.gameObject.SetActive(true);
-        userIndex.transform.parent.gameObject.SetActive(false);
+       
+       
+            
+          
+            subscribeButton.gameObject.SetActive(true);
+            if (!service.agents.Contains(UserManager.instance.user.email))
+            userIndex.transform.parent.gameObject.SetActive(false);
+
+      
       
 
     }
     public void Subscribe()
     {
+        service = brinis.ListingManager.Load<ServiceStation>(service.id);
         Placement placement = new Placement();
         placement.relation.client = UserManager.instance.user.id;
         placement.relation.station = service.id;
+        placement.relation.date = System.DateTime.UtcNow;
+        placement.relation.index = service.currentLast + 1;
         UserManager.instance.user.history.Add(placement);
         UserManager.instance.SaveUser();
         service.clientsListHistory.Add(placement);

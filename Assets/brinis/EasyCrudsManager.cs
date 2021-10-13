@@ -39,8 +39,16 @@ namespace brinis
             }
             return dic;
         }
+        public static void ShowAllFunction<T>(Transform prefab, Dictionary<string, T> allInfos, System.Func<Dictionary<string, T>, Dictionary<string, T>> lastMovesCallBack = null)
+        {
+            if (trustedObject == null)
+            {
+                trustedObject = FindObjectOfType<MonoBehaviour>();
+            }
+            trustedObject.StartCoroutine(ShowAll<T>(prefab, allInfos, lastMovesCallBack));
+        }
 
-        public static IEnumerator ShowAll<T>(Transform prefab, Dictionary<string, T> allInfos,System.Func<Dictionary<string, T>, Dictionary<string, T>> lastMovesCallBack=null)
+            public static IEnumerator ShowAll<T>(Transform prefab, Dictionary<string, T> allInfos,System.Func<Dictionary<string, T>, Dictionary<string, T>> lastMovesCallBack=null)
         {
             ListingManager.AllPrefabsCheckTable<T>(prefab);
             if (trustedObject==null)
@@ -616,7 +624,14 @@ namespace brinis
         }
         public static void SetTextAutomaticly<T>(Transform prefabPivotInstance, T t)
         {
-            trustedObject.StartCoroutine(SetAutomaticlyRoutine<T>(prefabPivotInstance, t));
+            try
+            {
+               trustedObject.StartCoroutine(SetAutomaticlyRoutine<T>(prefabPivotInstance, t));
+
+            }catch(Exception e)
+            {
+                Debug.LogError("brinis log : "+e.Message);
+            }
         }
         public static bool canWorkd=true;
 

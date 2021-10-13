@@ -16,7 +16,7 @@ public class ServicesListerController : MonoBehaviour
     public void OpenServiceConumersList(ServiceStation s)
     {
         consumersList.service = s;
-        consumersList.gameObject.SetActive(false);
+        consumersList.ShowList();
         consumersList.GetComponent<EFE_PanelTransition>().DoTransitionIn();
     }
     // Update is called once per frame

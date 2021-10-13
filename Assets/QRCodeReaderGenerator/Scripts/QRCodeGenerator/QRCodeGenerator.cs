@@ -19,12 +19,12 @@ public class QRCodeGenerator : MonoBehaviour {
         Emailer.SendAnEmail("Voici votre QRcode de Service nommé: Madhmoun_1", bytes);
       */
     }
-    public void GenerateQRCode(string text)
+    public void GenerateQRCode(string text,ServiceStation service)
     {
         Texture2D myQR = generateQR(text);
         rawImage.texture = myQR;
         byte[] bytes = myQR.EncodeToPNG();
-        Emailer.SendAnEmail("Voici votre QRcode de Service nommé: Madhmoun_1", bytes);
+        Emailer.SendAnEmail(UserManager.instance.user.email,"Voici votre QRcode de Service nommé:"+service.name+" window: "+service.windowNumber,service.name, bytes);
     }
 	
 	// Update is called once per frame

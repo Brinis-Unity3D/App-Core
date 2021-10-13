@@ -15,21 +15,28 @@ public class QRScanner : MonoBehaviour
   
     public UnityEvent onScanSuccess;
     public ServiceDetailsPanelController serviceDetailsPanel;
-    void Start()
+    void   Start()
     {
-      
         var renderer = GetComponent<RawImage>();
         webcamTexture = new WebCamTexture(512, 512);
         renderer.material.mainTexture = webcamTexture;
+        ScanAgain();
+
+    }
+   public void ScanAgain()
+    {
+       
         StartCoroutine(GetQRCode());
     }
 
     IEnumerator GetQRCode()
     {
+      
         IBarcodeReader barCodeReader = new BarcodeReader();
         webcamTexture.Play();
+        detectedService = new ServiceStation();
         var snap = new Texture2D(webcamTexture.width, webcamTexture.height, TextureFormat.ARGB32, false);
-        while (string.IsNullOrEmpty(QrCode))
+        while (string.IsNullOrWhiteSpace( detectedService.name))
         {
             try
             {
@@ -38,35 +45,46 @@ public class QRScanner : MonoBehaviour
                 if (Result != null)
                 {
                     QrCode = Result.Text;
-                    try
-                    {
-                        AdsManager.instance.UserChoseToWatchAd();
-                        onScanSuccess.Invoke();
-                    }
-                    catch(Exception e )
-                    {
-                        Debug.LogError(e.Message);
-                    }
                     SubscribeToQueue();
                     if (!string.IsNullOrEmpty(QrCode))
                     {
                         Debug.Log("DECODED TEXT FROM QR: " + QrCode);
-                        break;
+                      //  break;
                     }
                 }
             }
             catch (Exception ex) { Debug.LogWarning(ex.Message); }
             yield return null;
         }
+        try
+        {
+            
+            //AdsManager.instance.UserChoseToWatchAd();
+            onScanSuccess.Invoke();
+        }
+        catch (Exception e)
+        {
+            Debug.LogError(e.Message);
+        }
+       
         webcamTexture.Stop();
     }
+
+  public  ServiceStation detectedService=new ServiceStation();
     public void SubscribeToQueue()
     {
-        string json = SecurityManager.Base64Decode(QrCode);
-        QrCode = json;
-        ServiceStation detectedService = JsonConvert.DeserializeObject<ServiceStation>(json);
-        serviceDetailsPanel.service = detectedService;
-        serviceDetailsPanel.UpdatePanel();
+        try
+        {
+            string json = SecurityManager.Base64Decode(QrCode);
+            QrCode = json;
+            detectedService = JsonConvert.DeserializeObject<ServiceStation>(json);
+            serviceDetailsPanel.service = detectedService;
+            serviceDetailsPanel.UpdatePanel();
+
+        }catch(Exception e)
+        {
+            Debug.Log(e.Message);
+        }
 
         //Load ServiceStationFromDatabase add Relation to it then save it  again to database
 
