@@ -49,7 +49,6 @@ namespace brinis
             yield return null;
             yield return null;
             yield return null;
-            yield return new WaitForSeconds(1);
 
             print("after yield");
            /* AppOptions options = new AppOptions();
@@ -57,7 +56,7 @@ namespace brinis
             FirebaseApp app = FirebaseApp.Create(options);
            */
            
-
+                
             while (!FirebaseBehavior.instance) yield return null;
             while (FirebaseBehavior.instance.reference==null) yield return null;
             print("getting ref from FirebaseBehavior.instance");
@@ -83,16 +82,19 @@ namespace brinis
 
         public static void Save<T>(object t)
         {
-            if (!canWork)
-            {
-                Debug.LogError("you are not subscribed to the Listing Manager");
-                return;
-            }
+           
+            if (!trustedObject) trustedObject = FindObjectOfType<MonoBehaviour>();
+            trustedObject.StartCoroutine(SaveRoutine<T>(t));
+           
+        }
+       static IEnumerator SaveRoutine<T>(object t)
+        {
+            while (reference==null) yield return null;
             string id = "" + t.GetType().GetField("id").GetValue(t);
             if (string.IsNullOrWhiteSpace(id))
             {
                 Debug.LogError("id is null for the object of type " + t.GetType());
-                return;
+                yield break;
             }
             reference.Root.Child(EasyCrudsManager.TableName<T>()).Child(t.GetType().ToString()[0] + id).SetRawJsonValueAsync(JsonConvert.SerializeObject(t));
         }
@@ -190,6 +192,7 @@ namespace brinis
 
         public static void StringJsonToCanvas<T>(string json, System.Func<Dictionary<string, T>, Dictionary<string, T>> lastMovesCallBack = null)
         {
+            if (trustedObject == null) trustedObject = FindObjectOfType<MonoBehaviour>();
             //Debug.Log("string to canvas for " + json);
             if (string.IsNullOrWhiteSpace(json)) return;
             if (!EasyCrudsManager.allTables.ContainsKey(EasyCrudsManager.TableName<T>()))
@@ -235,6 +238,7 @@ namespace brinis
             }
             else
             {
+                if (trustedObject == null) trustedObject = FindObjectOfType<MonoBehaviour>();
                 trustedObject.StartCoroutine(WaitForKeyThenSubScribe<T>());
                 return default(T);
             }
