@@ -510,114 +510,120 @@ namespace brinis
             foreach (FieldInfo p in allpropertys)
             {
                 //  Debug.Log(p.Name + "=" + p.GetValue(t));
-
-                pivot =FindDeepChild(prefabPivotInstance, p.Name);//prefabPivotInstance.Find(p.Name);
-                if (pivot)
+                yield return null;
+                try
                 {
+                    pivot = FindDeepChild(prefabPivotInstance, p.Name);//prefabPivotInstance.Find(p.Name);
+                    if (pivot)
+                    {
 
-                    if (pivot.GetComponentInChildren<VideoPlayer>())
-                    {
-                        Debug.Log(" pivot.GetComponent<VideoPlayer>() ");
-                        DownloadVideoFunction(pivot.GetComponent<VideoPlayer>(), p.GetValue(t) + "");
-                    }
-                    else
-                    if (pivot.GetComponent<RawImage>())
-                    {
-                        DownloadImageFunction(pivot.GetComponent<RawImage>(), p.GetValue(t) + "");
-                    }
-                    if (pivot.GetComponent<SpriteRenderer>())
-                    {
-                        //  start(pivot.GetComponent<RawImage>(), p.GetValue(t) + "");
-                        
-                        if (instance && instance.pivotRawImageForSprites)
+                        if (pivot.GetComponentInChildren<VideoPlayer>())
                         {
-                           
-                         yield return   trustedObject.StartCoroutine(DownloadSprite(pivot.GetComponent<SpriteRenderer>(), p.GetValue(t) + ""));
+                            Debug.Log(" pivot.GetComponent<VideoPlayer>() ");
+                            DownloadVideoFunction(pivot.GetComponent<VideoPlayer>(), p.GetValue(t) + "");
+                        }
+                        else
+                        if (pivot.GetComponent<RawImage>())
+                        {
+                            DownloadImageFunction(pivot.GetComponent<RawImage>(), p.GetValue(t) + "");
+                        }
+                        if (pivot.GetComponent<SpriteRenderer>())
+                        {
+                            //  start(pivot.GetComponent<RawImage>(), p.GetValue(t) + "");
+
+                            if (instance && instance.pivotRawImageForSprites)
+                            {
+
+                                trustedObject.StartCoroutine(DownloadSprite(pivot.GetComponent<SpriteRenderer>(), p.GetValue(t) + ""));
+                            }
+                            else
+                            {
+                                Debug.LogError("to show sprites you need to add to the scene EasyCrudsManager.cs and put the pivot raw image variable");
+                            }
+
+                        }
+                        if (pivot.GetComponent<TMPro.TextMeshProUGUI>())
+                        {
+
+                            pivot.GetComponent<TMPro.TextMeshProUGUI>().text = "" + p.GetValue(t);
+                            pivot.GetComponent<TMPro.TextMeshProUGUI>().text = "" + p.GetValue(t);
+                            pivot.GetComponent<TMPro.TextMeshProUGUI>().text = "" + p.GetValue(t);
                         }
                         else
                         {
-                            Debug.LogError("to show sprites you need to add to the scene EasyCrudsManager.cs and put the pivot raw image variable");
+                            //Debug.Log("pivot.GetComponent<Text>() =false at " + p.Name);
                         }
+                        if (pivot.GetComponent<TMPro.TMP_InputField>())
+                        {
 
-                    }
-                    if (pivot.GetComponent<TMPro.TextMeshProUGUI>())
-                    {
+                            pivot.GetComponent<TMPro.TMP_InputField>().text = "" + p.GetValue(t);
+                            pivot.GetComponent<TMPro.TMP_InputField>().text = "" + p.GetValue(t);
+                            pivot.GetComponent<TMPro.TMP_InputField>().text = "" + p.GetValue(t);
+                        }
+                        if (pivot.GetComponent<TMPro.TMP_Dropdown>())
+                        {
 
-                        pivot.GetComponent<TMPro.TextMeshProUGUI>().text = "" + p.GetValue(t);
-                        pivot.GetComponent<TMPro.TextMeshProUGUI>().text = "" + p.GetValue(t);
-                        pivot.GetComponent<TMPro.TextMeshProUGUI>().text = "" + p.GetValue(t);
+                            if (p.FieldType.BaseType == typeof(Enum))
+                            {
+
+                                pivot.GetComponent<TMPro.TMP_Dropdown>().ClearOptions();
+                                pivot.GetComponent<TMPro.TMP_Dropdown>().options = new List<TMPro.TMP_Dropdown.OptionData>();
+
+                                foreach (string r in Enum.GetNames(p.FieldType))
+                                {
+                                    //Debug.Log(r);
+                                    pivot.GetComponent<TMPro.TMP_Dropdown>().options.Add(new TMPro.TMP_Dropdown.OptionData(r));
+                                }
+                            }
+                            //  p.SetValue(t, pivot.GetComponent<Dropdown>().value);
+
+                        }
+                        if (pivot.GetComponent<Text>())
+                        {
+
+                            pivot.GetComponent<Text>().text = "" + p.GetValue(t);
+                            pivot.GetComponent<Text>().text = "" + p.GetValue(t);
+                            pivot.GetComponent<Text>().text = "" + p.GetValue(t);
+                        }
+                        else
+                        {
+                            //Debug.Log("pivot.GetComponent<Text>() =false at " + p.Name);
+                        }
+                        if (pivot.GetComponent<InputField>())
+                        {
+
+                            pivot.GetComponent<InputField>().text = "" + p.GetValue(t);
+                            pivot.GetComponent<InputField>().text = "" + p.GetValue(t);
+                            pivot.GetComponent<InputField>().text = "" + p.GetValue(t);
+                        }
+                        if (pivot.GetComponent<Dropdown>())
+                        {
+
+                            if (p.FieldType.BaseType == typeof(Enum))
+                            {
+
+                                pivot.GetComponent<Dropdown>().ClearOptions();
+                                pivot.GetComponent<Dropdown>().options = new List<Dropdown.OptionData>();
+
+                                foreach (string r in Enum.GetNames(p.FieldType))
+                                {
+                                    //Debug.Log(r);
+                                    pivot.GetComponent<Dropdown>().options.Add(new Dropdown.OptionData(r));
+                                }
+                            }
+                            //  p.SetValue(t, pivot.GetComponent<Dropdown>().value);
+
+                        }
                     }
                     else
                     {
-                        //Debug.Log("pivot.GetComponent<Text>() =false at " + p.Name);
+                        // Debug.LogError("didnt find text with name " + p.Name);
                     }
-                    if (pivot.GetComponent<TMPro.TMP_InputField>())
-                    {
-
-                        pivot.GetComponent<TMPro.TMP_InputField>().text = "" + p.GetValue(t);
-                        pivot.GetComponent<TMPro.TMP_InputField>().text = "" + p.GetValue(t);
-                        pivot.GetComponent<TMPro.TMP_InputField>().text = "" + p.GetValue(t);
-                    }
-                    if (pivot.GetComponent<TMPro.TMP_Dropdown>())
-                    {
-
-                        if (p.FieldType.BaseType == typeof(Enum))
-                        {
-
-                            pivot.GetComponent<TMPro.TMP_Dropdown>().ClearOptions();
-                            pivot.GetComponent<TMPro.TMP_Dropdown>().options = new List<TMPro.TMP_Dropdown.OptionData>();
-
-                            foreach (string r in Enum.GetNames(p.FieldType))
-                            {
-                                //Debug.Log(r);
-                                pivot.GetComponent<TMPro.TMP_Dropdown>().options.Add(new TMPro.TMP_Dropdown.OptionData(r));
-                            }
-                        }
-                        //  p.SetValue(t, pivot.GetComponent<Dropdown>().value);
-
-                    }
-                    if (pivot.GetComponent<Text>())
-                    {
-
-                        pivot.GetComponent<Text>().text = "" + p.GetValue(t);
-                        pivot.GetComponent<Text>().text = "" + p.GetValue(t);
-                        pivot.GetComponent<Text>().text = "" + p.GetValue(t);
-                    }
-                    else
-                    {
-                        //Debug.Log("pivot.GetComponent<Text>() =false at " + p.Name);
-                    }
-                    if (pivot.GetComponent<InputField>())
-                    {
-
-                        pivot.GetComponent<InputField>().text = "" + p.GetValue(t);
-                        pivot.GetComponent<InputField>().text = "" + p.GetValue(t);
-                        pivot.GetComponent<InputField>().text = "" + p.GetValue(t);
-                    }
-                    if (pivot.GetComponent<Dropdown>())
-                    {
-
-                        if (p.FieldType.BaseType == typeof(Enum))
-                        {
-
-                            pivot.GetComponent<Dropdown>().ClearOptions();
-                            pivot.GetComponent<Dropdown>().options = new List<Dropdown.OptionData>();
-
-                            foreach (string r in Enum.GetNames(p.FieldType))
-                            {
-                                //Debug.Log(r);
-                                pivot.GetComponent<Dropdown>().options.Add(new Dropdown.OptionData(r));
-                            }
-                        }
-                        //  p.SetValue(t, pivot.GetComponent<Dropdown>().value);
-
-                    }
-                }
-                else
+                    //Get  child with name and sset text in it ;
+                }catch(Exception e)
                 {
-                    // Debug.LogError("didnt find text with name " + p.Name);
+                    Debug.LogError("brinis log " + e.Message);
                 }
-                //Get  child with name and sset text in it ;
             }
             prefabPivotInstance.gameObject.SetActive(false);
             prefabPivotInstance.gameObject.SetActive(true);
