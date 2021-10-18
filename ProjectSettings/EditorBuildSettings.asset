@@ -6,12 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
-    path: Assets/Scenes 1/SampleScene.unity
+    path: Assets/#Main Branch/Scenes 1/SampleScene.unity
     guid: 0a6686806db0ae1468babf2ce64b6b30
   - enabled: 1
-    path: Assets/Scenes 1/mainScene.unity
+    path: Assets/#Main Branch/Scenes 1/mainScene.unity
     guid: d267192f7abb8294293cadeed29b9b39
   - enabled: 0
-    path: Assets/QRCodeReaderGenerator/Example Scenes/QRCodeGenerator.unity
+    path: Assets/#Main Branch/QRCodeReaderGenerator/Example Scenes/QRCodeGenerator.unity
     guid: ca5306eb186f57e48a353213481bedaa
   m_configObjects: {}
