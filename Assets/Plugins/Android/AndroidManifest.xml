@@ -16,12 +16,5 @@
      android:permission="android.permission.BIND_JOB_SERVICE"
      android:exported="false" >
     </service>
-    <service android:name="com.webengage.android.fcm.WebEngageFirebaseMessagingService">
-      <intent-filter>
-        <action android:name="com.google.firebase.MESSAGING_EVENT" />
-      </intent-filter>
-    </service>
-    <androidPackage spec="com.google.firebase:firebase-inappmessaging-display:19.0.2">
-    </androidPackage>
   </application>
 </manifest>
