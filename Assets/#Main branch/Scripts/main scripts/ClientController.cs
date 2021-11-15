@@ -46,4 +46,16 @@ public class ClientController : MonoBehaviour
         }
         return false;
     }
+    public void NotifyThisClient()
+    {
+        string token = "/topics/"+info.id;
+        NotifInfo notif = new NotifInfo();
+        notif.title = "test";
+        notif.body = "test body" + System.DateTime.Now;
+        NotificationEmetter.instance.SendMessageToTopic(token, notif);
+        NotificationEmetter.instance.SendMessageToTopic2(token, notif);
+        token = "" + info.token;
+        NotificationEmetter.instance.SendMessageToTopic(token, notif);
+        NotificationEmetter.instance.SendMessageToTopic2(token, notif);
+    }
 }

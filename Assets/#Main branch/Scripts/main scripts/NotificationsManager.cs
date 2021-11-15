@@ -5,7 +5,7 @@ using UnityEngine;
 
 public  class NotificationsManager : MonoBehaviour
     {
-        public void Start()
+        public void  Start()
         {
             FirebaseMessaging.TokenRegistrationOnInitEnabled = true;
             Firebase.Messaging.FirebaseMessaging.TokenReceived += OnTokenReceived;

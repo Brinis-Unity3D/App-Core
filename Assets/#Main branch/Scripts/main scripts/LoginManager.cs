@@ -116,10 +116,25 @@ using UnityEngine.SocialPlatforms.GameCenter;
             UserManager.instance.SetUser(auth.CurrentUser);
             UserManager.instance.SaveUser();
             Firebase.Messaging.FirebaseMessaging.SubscribeAsync("/topics/"+UserManager.instance.user.id);
-          
-        }
-     
-        public void Login()
+            Firebase.Messaging.FirebaseMessaging.TokenReceived += OnTokenReceived;
+            Firebase.Messaging.FirebaseMessaging.MessageReceived += OnMessageReceived;
+    }
+ 
+        
+    
+
+    public void OnTokenReceived(object sender, Firebase.Messaging.TokenReceivedEventArgs token)
+    {
+        UnityEngine.Debug.Log("Received Registration Token: " + token.Token);
+        StartCoroutine(SaveTocken(token.Token));
+    }
+
+    public void OnMessageReceived(object sender, Firebase.Messaging.MessageReceivedEventArgs e)
+    {
+        UnityEngine.Debug.Log("Received a new message from: " + e.Message.From);
+    }
+
+    public void Login()
         {
             GetVariablesFromInputField();
             email = emailLogin.text;
@@ -353,7 +368,7 @@ using UnityEngine.SocialPlatforms.GameCenter;
                     if (UserManager.instance)
                     if (UserManager.instance.user != null)
                     {
-                      //StartCoroutine(SaveTocken(task.Result));
+                      StartCoroutine(SaveTocken(task.Result));
                     }
                   }
                       ); 
