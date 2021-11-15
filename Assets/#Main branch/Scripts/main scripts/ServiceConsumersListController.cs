@@ -11,7 +11,12 @@ public class ServiceConsumersListController : MonoBehaviour
     public ServiceStation service = new ServiceStation();
     public Button nextButton;
     public ServiceDetailsPanelController serviceDetailsPanel;
-    
+
+    private void OnEnable()
+    {
+        UpdatePanel();
+    }
+
     public void ShowList()
     {
         if (service == null) return;
@@ -23,6 +28,7 @@ public class ServiceConsumersListController : MonoBehaviour
             if (!allInfos.ContainsKey("C"+p.relation.client))
             {
                 Client c = brinis.ListingManager.Load<Client>(p.relation.client);
+                if (c==null) continue;
                 if (p.relation.index != 0)
                     c.index = p.relation.index;
                 else
@@ -37,11 +43,21 @@ public class ServiceConsumersListController : MonoBehaviour
     }
     public void UpdatePanel()
     {
+        if (UserManager.instance == null) return;
         service = brinis.ListingManager.Load<ServiceStation>(service.id);
+        if (service == null) return;
         CheckListOfHistoryForToday();
         service.currentLast = service.clientsListForToday.Count;
-        if (service.currentIndex >= service.currentLast) { nextButton.interactable = false; service.currentIndex = service.currentLast; }
-        brinis.EasyCrudsManager.SetTextAutomaticly<ServiceStation>(transform, service);
+        if (service.currentIndex >= service.currentLast) 
+        { 
+            nextButton.interactable = false; service.currentIndex = service.currentLast; 
+        }
+        else
+        if (service.currentIndex <= service.currentLast)
+        {
+            nextButton.interactable = true;
+        }
+            brinis.EasyCrudsManager.SetTextAutomaticly<ServiceStation>(transform, service);
         brinis.ListingManager.Save<ServiceStation>(service);
 
     }
@@ -60,7 +76,10 @@ public class ServiceConsumersListController : MonoBehaviour
     List<Placement> listToRemoveForToday = new List<Placement>();
     public void CheckListOfHistoryForToday()
     {
-        foreach(Placement p in service.clientsListForToday)
+        if (service == null) return;
+        if (service.clientsListForToday == null) return;
+        if (service.clientsListForToday.Count==0) return;
+        foreach (Placement p in service.clientsListForToday)
         {
             if ((p.relation.date.Year != System.DateTime.UtcNow.Year))      if(!listToRemoveForToday.Contains(p)) listToRemoveForToday.Add(p) ;
             if ((p.relation.date.Month != System.DateTime.UtcNow.Month))    if (!listToRemoveForToday.Contains(p)) listToRemoveForToday.Add(p);

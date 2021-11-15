@@ -7,9 +7,14 @@ public class ServicesListerController : MonoBehaviour
     // Start is called before the first frame update
     public ServiceConsumersListController consumersList;
     public Transform prefab;
-    void  Start()
+    private void OnEnable()
     {
-       // yield return new WaitForSeconds(1);
+        brinis.ListingManager.SyncTableFromDatabase<ServiceStation>(prefab);
+        print("");
+    }
+    IEnumerator  Start()
+    {
+        yield return new WaitForSeconds(1);
         brinis.ListingManager.SyncTableFromDatabase<ServiceStation>(prefab);
         print("");
     }

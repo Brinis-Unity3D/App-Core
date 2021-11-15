@@ -23,7 +23,7 @@ public class ServiceDetailsPanelController : MonoBehaviour
             ShowPlayerIndexOrSubscribeButton();
         }catch(Exception e)
         {
-            Debug.LogError("brinis log" + e.Message);
+            Debug.LogWarning("brinis log" + e.Message);
         }
     }
     void ShowPlayerIndexOrSubscribeButton()
