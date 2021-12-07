@@ -10,13 +10,13 @@ public class ServicesListerController : MonoBehaviour
     private void OnEnable()
     {
         brinis.ListingManager.SyncTableFromDatabase<ServiceStation>(prefab);
-        print("");
+       
     }
     IEnumerator  Start()
     {
         yield return new WaitForSeconds(1);
         brinis.ListingManager.SyncTableFromDatabase<ServiceStation>(prefab);
-        print("");
+   
     }
     public void OpenServiceConumersList(ServiceStation s)
     {

@@ -31,7 +31,10 @@ public class ClientController : MonoBehaviour
         }
         indexText.text ="" +info.index;
       */
-
+      if(GetComponentInChildren<NotifyThisTokenController>())
+        {
+            GetComponentInChildren<NotifyThisTokenController>().token = info.token;
+        }
     }
  
     
@@ -39,7 +42,7 @@ public class ClientController : MonoBehaviour
     {
         Debug.Log(serviceListConsumer.name);
         Debug.Log(serviceListConsumer.service.id);
-        Debug.Log(serviceListConsumer.service.clientsListForToday[0].relation.client);
+        //Debug.Log(serviceListConsumer.service.clientsListForToday[0].relation.client);
         foreach (Placement p in serviceListConsumer.service.clientsListForToday)
         {
             if (p.relation.client == c.id) return true;
@@ -48,14 +51,15 @@ public class ClientController : MonoBehaviour
     }
     public void NotifyThisClient()
     {
+        
         string token = "/topics/"+info.id;
         NotifInfo notif = new NotifInfo();
         notif.title = "test";
         notif.body = "test body" + System.DateTime.Now;
-        NotificationEmetter.instance.SendMessageToTopic(token, notif);
-        NotificationEmetter.instance.SendMessageToTopic2(token, notif);
+       // NotificationEmetter.instance.SendMessageToTopic(token, notif);
+       // NotificationEmetter.instance.SendMessageToTopic2(token, notif);
         token = "" + info.token;
-        NotificationEmetter.instance.SendMessageToTopic(token, notif);
-        NotificationEmetter.instance.SendMessageToTopic2(token, notif);
+        NotificationEmetter.instance.SendMessageToTopic(token,notif);
+       // NotificationEmetter.instance.SendMessageToTopic2(token, notif);
     }
 }

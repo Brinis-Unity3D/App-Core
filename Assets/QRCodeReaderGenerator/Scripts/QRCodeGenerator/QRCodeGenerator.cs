@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Newtonsoft.Json;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,6 +19,22 @@ public class QRCodeGenerator : MonoBehaviour {
         byte[] bytes = myQR.EncodeToPNG();
         Emailer.SendAnEmail("Voici votre QRcode de Service nommé: Madhmoun_1", bytes);
       */
+    }
+    public void ShowServiceQRcode(ServiceStation service)
+    {
+        ServiceStation s = new ServiceStation();
+        s.id = service.id;
+        s.name = service.name;
+        s.phoneNumber = service.phoneNumber;
+        s.votes = service.votes;
+
+      GenerateQRCodeLocally(SecurityManager.Base64Encode(JsonConvert.SerializeObject(s)));
+    }
+    public void GenerateQRCodeLocally(string text)
+    {
+        Texture2D myQR = generateQR(text);
+        rawImage.texture = myQR;
+   
     }
     public void GenerateQRCode(string text,ServiceStation service)
     {

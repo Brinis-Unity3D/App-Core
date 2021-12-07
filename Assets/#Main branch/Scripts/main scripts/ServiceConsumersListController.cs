@@ -39,10 +39,15 @@ public class ServiceConsumersListController : MonoBehaviour
 
         }
         brinis.EasyCrudsManager.ShowAllFunction<Client>(userPrefab, allInfos);
-        
+
+        if (GetComponent<QRCodeGenerator>())
+            GetComponent<QRCodeGenerator>().ShowServiceQRcode(service);
+
+
     }
     public void UpdatePanel()
     {
+       
         if (UserManager.instance == null) return;
         service = brinis.ListingManager.Load<ServiceStation>(service.id);
         if (service == null) return;

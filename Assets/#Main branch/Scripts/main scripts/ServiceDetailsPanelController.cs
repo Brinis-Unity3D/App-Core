@@ -62,6 +62,8 @@ public class ServiceDetailsPanelController : MonoBehaviour
     {
         service = brinis.ListingManager.Load<ServiceStation>(service.id);
         Placement placement = new Placement();
+        Debug.Log("user id =" + UserManager.instance.name);
+        Debug.Log("user id =" + UserManager.instance.user.id);
         placement.relation.client = UserManager.instance.user.id;
         placement.relation.station = service.id;
         placement.relation.date = System.DateTime.UtcNow;

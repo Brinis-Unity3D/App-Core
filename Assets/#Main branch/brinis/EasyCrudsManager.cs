@@ -47,9 +47,34 @@ namespace brinis
             }
             trustedObject.StartCoroutine(ShowAll<T>(prefab, allInfos, lastMovesCallBack));
         }
-
-            public static IEnumerator ShowAll<T>(Transform prefab, Dictionary<string, T> allInfos,System.Func<Dictionary<string, T>, Dictionary<string, T>> lastMovesCallBack=null)
+        public static Transform[] GetTopLevelChildren(Transform Parent)
         {
+            Transform[] Children = new Transform[Parent.childCount];
+            for (int ID = 0; ID < Parent.childCount; ID++)
+            {
+                Children[ID] = Parent.GetChild(ID);
+            }
+            return Children;
+        }
+
+        public static IEnumerator ShowAll<T>(Transform prefab, Dictionary<string, T> allInfos,System.Func<Dictionary<string, T>, Dictionary<string, T>> lastMovesCallBack=null)
+        {
+            foreach (Transform t in GetTopLevelChildren(prefab.parent))
+            {
+                MonoBehaviour m = HasController<T>(t);
+                if (m)
+                {
+                    if (m.GetType().GetField("info") != null)
+                    {
+                      if(!ShouldShow<T>(  m.GetType().GetField("info").GetValue(m)))
+                        { 
+                            t.gameObject.SetActive(false); 
+                        }
+                    }
+                }
+               
+            }
+
             ListingManager.AllPrefabsCheckTable<T>(prefab);
             if (trustedObject==null)
                 {
@@ -128,6 +153,25 @@ namespace brinis
             //here;
             EasyCrudsManager.SetTextAutomaticly<T>(prefabPivotInstance, t);
             yield return null;
+        }
+        public static MonoBehaviour HasController<T>(Transform mono)
+        {
+            // allPrefabs[TableName<T>()].GetComponent<>
+            //Debug.Log("true = " + true);
+            string key = TableName<T>(typeof(T).FullName);
+           
+        
+                foreach (MonoBehaviour m in mono.GetComponents<MonoBehaviour>())
+                {
+
+                    if (m.GetType() + "" == typeof(T).FullName + "Controller")
+                    {
+                   
+                    return m;
+                    }
+                 
+                }
+            return null;
         }
         public static bool ShouldShow<T>(object t,System.Func<T,bool> callback=null)
         {

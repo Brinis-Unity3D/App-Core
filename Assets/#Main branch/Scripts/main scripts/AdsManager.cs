@@ -89,7 +89,7 @@ public class AdsManager : MonoBehaviour
         {
             return;
         }
-
+        if (ad == null) return;
         ad.OnAdDidDismissFullScreenContent += HandleAdDidDismissFullScreenContent;
         ad.OnAdFailedToPresentFullScreenContent += HandleAdFailedToPresentFullScreenContent;
         ad.OnAdDidPresentFullScreenContent += HandleAdDidPresentFullScreenContent;
