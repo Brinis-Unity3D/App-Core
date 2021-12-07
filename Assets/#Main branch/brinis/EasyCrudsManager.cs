@@ -20,7 +20,7 @@ namespace brinis
         public static EasyCrudsManager instance;
         public static Dictionary<string, Transform> allInstances = new Dictionary<string, Transform>();
         public static MonoBehaviour trustedObject;
-        public static Dictionary<string, Transform> allPrefabs=new Dictionary<string, Transform>();
+        public static Dictionary<string, Dictionary<string, Transform>> allPrefabs = new Dictionary<string, Dictionary<string, Transform>>();
         public static Dictionary<string, Dictionary<string, object>> allTables = new Dictionary<string, Dictionary<string, object>>();
         static WaitForSeconds w = new WaitForSeconds(0.001f);
         public RawImage pivotRawImageForSprites;
@@ -66,7 +66,7 @@ namespace brinis
                 {
                     if (m.GetType().GetField("info") != null)
                     {
-                      if(!ShouldShow<T>(  m.GetType().GetField("info").GetValue(m)))
+                      if(!ShouldShow<T>(  m.GetType().GetField("info").GetValue(m),prefab))
                         { 
                             t.gameObject.SetActive(false); 
                         }
@@ -94,10 +94,10 @@ namespace brinis
 
                 float time = Time.realtimeSinceStartup;
                 float frame = 1 / 60;
-                allInfos = LastMoves<T>(allInfos,lastMovesCallBack);
+                allInfos = LastMoves<T>(prefab,allInfos,lastMovesCallBack);
                 foreach (string k in allInfos.Keys)
                 {
-                    if (ShouldShow<T>(allInfos[k]))
+                    if (ShouldShow<T>(allInfos[k],prefab))
                     {
                         //UnityMainThreadDispatcher.Instance().Enqueue(InstantiateInThread<T>(k, prefab, allInfos[k]));
                         trustedObject.StartCoroutine(InstantiateInThread<T>(k, prefab, allInfos[k]));
@@ -173,7 +173,7 @@ namespace brinis
                 }
             return null;
         }
-        public static bool ShouldShow<T>(object t,System.Func<T,bool> callback=null)
+        public static bool ShouldShow<T>(object t,Transform prefab,System.Func<T,bool> callback=null)
         {
             // allPrefabs[TableName<T>()].GetComponent<>
             //Debug.Log("true = " + true);
@@ -183,7 +183,7 @@ namespace brinis
                 return callback((T)t);
             }
             if (allPrefabs.ContainsKey(key))
-            foreach (MonoBehaviour m in allPrefabs[key].GetComponents<MonoBehaviour>())
+            foreach (MonoBehaviour m in allPrefabs[key][prefab.name].GetComponents<MonoBehaviour>())
             {
                 
                 if (m.GetType() + "" == t.GetType().FullName + "Controller")
@@ -212,7 +212,7 @@ namespace brinis
 
             return true;
         }
-        public static Dictionary<string, T> LastMoves<T>(Dictionary<string, T> allInfos,System.Func<Dictionary<string, T>, Dictionary<string, T>> callBack=null)
+        public static Dictionary<string, T> LastMoves<T>(Transform prefab,Dictionary<string, T> allInfos,System.Func<Dictionary<string, T>, Dictionary<string, T>> callBack=null)
         {
 
             //allInfos = allInfos;
@@ -224,7 +224,7 @@ namespace brinis
             }
 
             if(allPrefabs.ContainsKey(key))
-            foreach (MonoBehaviour m in allPrefabs[key].GetComponents<MonoBehaviour>())
+            foreach (MonoBehaviour m in prefab.GetComponents<MonoBehaviour>())
             {
                 if (m.GetType() + "" == typeof(T).FullName + "Controller")
                 {

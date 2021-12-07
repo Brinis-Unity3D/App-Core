@@ -102,11 +102,20 @@ namespace brinis
         {
             if (EasyCrudsManager.allPrefabs == null)
             {
-                EasyCrudsManager.allPrefabs = new Dictionary<string, Transform>();
+                EasyCrudsManager.allPrefabs = new Dictionary<string, Dictionary<string, Transform>>();
             }
             if (!EasyCrudsManager.allPrefabs.ContainsKey(EasyCrudsManager.TableName<T>()))
             {
-                EasyCrudsManager.allPrefabs.Add(EasyCrudsManager.TableName<T>(), prefab);
+                EasyCrudsManager.allPrefabs.Add(EasyCrudsManager.TableName<T>(), new Dictionary<string, Transform>());
+            }
+            if (EasyCrudsManager.allPrefabs[EasyCrudsManager.TableName<T>()] == null)
+            {
+                EasyCrudsManager.allPrefabs[EasyCrudsManager.TableName<T>()] = new Dictionary<string, Transform>();
+            }
+
+            if (!EasyCrudsManager.allPrefabs[EasyCrudsManager.TableName<T>()].ContainsKey(prefab.name))
+            {
+                EasyCrudsManager.allPrefabs[EasyCrudsManager.TableName<T>()].Add(prefab.name, prefab);
             }
         }
 
@@ -206,7 +215,8 @@ namespace brinis
             else
             {
                 if (EasyCrudsManager.allPrefabs.ContainsKey(EasyCrudsManager.TableName<T>()))
-                    trustedObject.StartCoroutine(EasyCrudsManager.ShowAll<T>(EasyCrudsManager.allPrefabs[EasyCrudsManager.TableName<T>()], EasyCrudsManager.allTables[EasyCrudsManager.TableName<T>()].ToDictionary(k => k.Key, k => (T)k.Value),lastMovesCallBack));
+                    foreach(Transform prefab in EasyCrudsManager.allPrefabs[EasyCrudsManager.TableName<T>()].Values)
+                    trustedObject.StartCoroutine(EasyCrudsManager.ShowAll<T>(prefab, EasyCrudsManager.allTables[EasyCrudsManager.TableName<T>()].ToDictionary(k => k.Key, k => (T)k.Value),lastMovesCallBack));
                 else
                     Debug.Log("no prefab for " + EasyCrudsManager.TableName<T>());
             }
