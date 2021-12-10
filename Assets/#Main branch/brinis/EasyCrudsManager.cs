@@ -39,13 +39,33 @@ namespace brinis
             }
             return dic;
         }
+
         public static void ShowAllFunction<T>(Transform prefab, Dictionary<string, T> allInfos, System.Func<Dictionary<string, T>, Dictionary<string, T>> lastMovesCallBack = null)
         {
-            if (trustedObject == null)
-            {
-                trustedObject = FindObjectOfType<MonoBehaviour>();
-            }
+            AllPrefabsCheckTable<T>(prefab);
             trustedObject.StartCoroutine(ShowAll<T>(prefab, allInfos, lastMovesCallBack));
+        }
+        public static void AllPrefabsCheckTable<T>(Transform prefab)
+        {
+            if (EasyCrudsManager.allPrefabs == null)
+            {
+                EasyCrudsManager.allPrefabs = new Dictionary<string, Dictionary<string, Transform>>();
+            }
+            if (!EasyCrudsManager.allPrefabs.ContainsKey(EasyCrudsManager.TableName<T>()))
+            {
+                EasyCrudsManager.allPrefabs.Add(EasyCrudsManager.TableName<T>(), new Dictionary<string, Transform>());
+            }
+            if (EasyCrudsManager.allPrefabs[EasyCrudsManager.TableName<T>()] == null)
+            {
+                EasyCrudsManager.allPrefabs[EasyCrudsManager.TableName<T>()] = new Dictionary<string, Transform>();
+            }
+
+            if (!EasyCrudsManager.allPrefabs[EasyCrudsManager.TableName<T>()].ContainsKey(prefab.name))
+            {
+                EasyCrudsManager.allPrefabs[EasyCrudsManager.TableName<T>()].Add(prefab.name, prefab);
+            }
+            if (!trustedObject) trustedObject = FindObjectOfType<MonoBehaviour>();
+            if (!trustedObject.gameObject.activeInHierarchy) trustedObject = FindObjectOfType<MonoBehaviour>();
         }
         public static Transform[] GetTopLevelChildren(Transform Parent)
         {
@@ -59,6 +79,8 @@ namespace brinis
 
         public static IEnumerator ShowAll<T>(Transform prefab, Dictionary<string, T> allInfos,System.Func<Dictionary<string, T>, Dictionary<string, T>> lastMovesCallBack=null)
         {
+            Debug.Log("showing " + prefab.name + " where data = " + JsonConvert.SerializeObject(allInfos));
+
             foreach (Transform t in GetTopLevelChildren(prefab.parent))
             {
                 MonoBehaviour m = HasController<T>(t);
@@ -66,21 +88,15 @@ namespace brinis
                 {
                     if (m.GetType().GetField("info") != null)
                     {
-                      if(!ShouldShow<T>(  m.GetType().GetField("info").GetValue(m),prefab))
-                        { 
-                            t.gameObject.SetActive(false); 
-                        }
+                      
+                        t.gameObject.SetActive(ShouldShow<T>(m.GetType().GetField("info").GetValue(m), prefab)); 
+                       
                     }
                 }
                
             }
 
-            ListingManager.AllPrefabsCheckTable<T>(prefab);
-            if (trustedObject==null)
-                {
-                    trustedObject = FindObjectOfType<MonoBehaviour>();
-                }
-           
+                AllPrefabsCheckTable<T>(prefab);
            
                 /// allTables[TableName<T>()] = allInfos.ToDictionary();
 
@@ -134,21 +150,21 @@ namespace brinis
         {
             // T t = allInfos[k];
             //Debug.Log(JsonConvert.SerializeObject(t));
-
+            string key = TableName<T>() + prefab.name + k;
             Transform prefabPivotInstance;
-            if (!allInstances.ContainsKey(TableName<T>() + k))
+            if (!allInstances.ContainsKey(key))
             {
                 prefabPivotInstance = Instantiate(prefab.gameObject).transform;
                 prefabPivotInstance.name = k;
                 prefabPivotInstance.transform.SetParent(prefab.transform.parent);
                 prefabPivotInstance.transform.localScale = prefab.transform.localScale;
-                allInstances.Add(TableName<T>() + k, prefabPivotInstance);
+                allInstances.Add(key, prefabPivotInstance);
                 yield return null;
 
             }
             else
             {
-                prefabPivotInstance = allInstances[TableName<T>() + k];
+                prefabPivotInstance = allInstances[key];
             }
             //here;
             EasyCrudsManager.SetTextAutomaticly<T>(prefabPivotInstance, t);
@@ -177,6 +193,7 @@ namespace brinis
         {
             // allPrefabs[TableName<T>()].GetComponent<>
             //Debug.Log("true = " + true);
+          
             string key = TableName<T>(t.GetType().FullName);
             if (callback != null)
             {

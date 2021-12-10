@@ -117,6 +117,8 @@ namespace brinis
             {
                 EasyCrudsManager.allPrefabs[EasyCrudsManager.TableName<T>()].Add(prefab.name, prefab);
             }
+            if (!trustedObject) trustedObject = FindObjectOfType<MonoBehaviour>();
+            if (!trustedObject.gameObject.activeInHierarchy) trustedObject = FindObjectOfType<MonoBehaviour>();
         }
 
         public static void SyncTableFromDatabase<T>(Transform prefab)
@@ -132,17 +134,19 @@ namespace brinis
                     );
                 StringJsonToCanvas<T>(PlayerPrefs.GetString(EasyCrudsManager.TableName<T>()));
             }
+
+            if(!EasyCrudsManager.allTables.ContainsKey(EasyCrudsManager.TableName<T>()))
             trustedObject.StartCoroutine(WaitForKeyThenSubScribe<T>());
 
         }
 
         static IEnumerator WaitForKeyThenSubScribe<T>()
         {
-            Debug.LogWarning("WaitForKeyThenSubScribe " + typeof(T));
+            //Debug.LogWarning("WaitForKeyThenSubScribe " + typeof(T));
             yield return null;
             while (reference==null)
             {
-                Debug.LogWarning("waiting  reference at " + instance.name);
+                Debug.LogWarning("waiting  reference at " + instance.name+" typeof " + typeof(T));
                 yield return new WaitForSeconds(1);
             }
             reference.Root
@@ -189,7 +193,7 @@ namespace brinis
         }
         static void HandleValueChanged<T>(object sender, ValueChangedEventArgs args)
         {
-           // Debug.Log("HandleValueChanged " + args.Snapshot.GetRawJsonValue());
+            Debug.Log("HandleValueChanged " + args.Snapshot.GetRawJsonValue());
             if (args.DatabaseError != null)
             {
                 Debug.LogError(args.DatabaseError.Message);
@@ -201,6 +205,7 @@ namespace brinis
 
         public static void StringJsonToCanvas<T>(string json, System.Func<Dictionary<string, T>, Dictionary<string, T>> lastMovesCallBack = null)
         {
+
             if (trustedObject == null) trustedObject = FindObjectOfType<MonoBehaviour>();
             //Debug.Log("string to canvas for " + json);
             if (string.IsNullOrWhiteSpace(json)) return;
@@ -215,8 +220,10 @@ namespace brinis
             else
             {
                 if (EasyCrudsManager.allPrefabs.ContainsKey(EasyCrudsManager.TableName<T>()))
-                    foreach(Transform prefab in EasyCrudsManager.allPrefabs[EasyCrudsManager.TableName<T>()].Values)
-                    trustedObject.StartCoroutine(EasyCrudsManager.ShowAll<T>(prefab, EasyCrudsManager.allTables[EasyCrudsManager.TableName<T>()].ToDictionary(k => k.Key, k => (T)k.Value),lastMovesCallBack));
+                {
+                    foreach (Transform prefab in EasyCrudsManager.allPrefabs[EasyCrudsManager.TableName<T>()].Values)
+                        trustedObject.StartCoroutine(EasyCrudsManager.ShowAll<T>(prefab, EasyCrudsManager.allTables[EasyCrudsManager.TableName<T>()].ToDictionary(k => k.Key, k => (T)k.Value), lastMovesCallBack));
+                }
                 else
                     Debug.Log("no prefab for " + EasyCrudsManager.TableName<T>());
             }

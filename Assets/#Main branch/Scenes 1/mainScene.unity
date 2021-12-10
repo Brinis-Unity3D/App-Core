@@ -2788,10 +2788,9 @@ MonoBehaviour:
   - {fileID: 4603293489718831950}
   - {fileID: 3779907698628375073}
   - {fileID: 1922951965}
-  - {fileID: 0}
+  - {fileID: 1418873030}
   - {fileID: 7234281395711987804}
   - {fileID: 1922951965}
-  - {fileID: 0}
   - {fileID: 1953101852}
   - {fileID: 181228675}
   - {fileID: 53464848138717486}
@@ -4424,6 +4423,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: OurServices List as client
       objectReference: {fileID: 0}
+    - target: {fileID: 6569949255435232467, guid: 3af899803913a6e43a4335a8a488ef3f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6598010907914429177, guid: 3af899803913a6e43a4335a8a488ef3f, type: 3}
       propertyPath: isClient
       value: 1
@@ -4463,6 +4466,10 @@ PrefabInstance:
     - target: {fileID: 6598010908332535930, guid: 3af899803913a6e43a4335a8a488ef3f, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6598010908332535931, guid: 3af899803913a6e43a4335a8a488ef3f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6598010908427656303, guid: 3af899803913a6e43a4335a8a488ef3f, type: 3}
       propertyPath: m_SizeDelta.y
@@ -4584,7 +4591,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6598010909615484407, guid: 3af899803913a6e43a4335a8a488ef3f, type: 3}
   m_PrefabInstance: {fileID: 809302837}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1418873030}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b50037e56239b334d9a6f2be61cd1356, type: 3}
@@ -7775,6 +7782,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1405747012}
   m_CullTransparentMesh: 1
+--- !u!1 &1418873030 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6569949255435232467, guid: 3af899803913a6e43a4335a8a488ef3f, type: 3}
+  m_PrefabInstance: {fileID: 809302837}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1436202520
 GameObject:
   m_ObjectHideFlags: 0
@@ -14973,9 +14985,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: Service Conssumers List
       objectReference: {fileID: 0}
+    - target: {fileID: 3489948263745359759, guid: e7afdea48367dd9488c2ef7d6e39aaab, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3518217907307558707, guid: e7afdea48367dd9488c2ef7d6e39aaab, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 300
       objectReference: {fileID: 0}
     - target: {fileID: 4007885636024594078, guid: e7afdea48367dd9488c2ef7d6e39aaab, type: 3}
       propertyPath: m_Pivot.x
@@ -15103,11 +15119,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7581682419974341166, guid: e7afdea48367dd9488c2ef7d6e39aaab, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7581682419974341166, guid: e7afdea48367dd9488c2ef7d6e39aaab, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7581682419974341166, guid: e7afdea48367dd9488c2ef7d6e39aaab, type: 3}
       propertyPath: m_AnchoredPosition.y
