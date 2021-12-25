@@ -1,3 +1,4 @@
+using brinis;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,8 +11,10 @@ public class ServicesListerController : MonoBehaviour
     public Transform prefab;
     private void OnEnable()
     {
-        brinis.ListingManager.SyncTableFromDatabase<ServiceStation>(prefab);
-       
+        //brinis.ListingManager.SyncTableFromDatabase<ServiceStation>(prefab);
+        brinis.EasyCrudsManager.ShowAllFunction<ServiceStation>(prefab,ListingManager.LoadTable<ServiceStation>());
+
+
     }
     IEnumerator  Start()
     {
