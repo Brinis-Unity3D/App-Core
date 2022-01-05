@@ -149,6 +149,8 @@ namespace brinis
                 Debug.LogWarning("waiting  reference at " + instance.name+" typeof " + typeof(T));
                 yield return new WaitForSeconds(1);
             }
+            if (EasyCrudsManager.allTables.ContainsKey(EasyCrudsManager.TableName<T>())) yield break;
+           
             reference.Root
       .Child(EasyCrudsManager.TableName<T>())
      .ValueChanged += HandleValueChanged<T>;

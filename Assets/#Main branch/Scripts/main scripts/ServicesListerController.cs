@@ -18,8 +18,9 @@ public class ServicesListerController : MonoBehaviour
     }
     IEnumerator  Start()
     {
-        yield return new WaitForSeconds(1);
-        brinis.ListingManager.SyncTableFromDatabase<ServiceStation>(prefab);
+        // yield return new WaitForSeconds(1);
+        // brinis.ListingManager.SyncTableFromDatabase<ServiceStation>(prefab);
+        yield return null;
    
     }
     public void OpenServiceConumersList(ServiceStation s)
